@@ -64,13 +64,31 @@ def flush(pref):
     _CL=[]
     __i=0
 
-def hist(*args, **kwargs):
-    aa=inspect.getcallargs(pyplot.hist, *args, **kwargs)
-    scmd(pyplot.hist.__name__, aa)
-    pyplot.hist(*args, **kwargs)
+def plotw(f):
+    "Wrap a plotting-type function"
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        aa=inspect.getcallargs(f, *args, **kwargs)
+        scmd(f.__name__, aa)
+        return f(*args, **kwargs)
+    return wrapper
 
-def savefig(*args, **kwargs):
-    kwargs["fname"]=args[0]
-    scmd(pyplot.savefig.__name__, kwargs)
-    flush(os.path.splitext(args[0])[0])
-    pyplot.savefig(**kwargs)
+plotfns=["hist", "plot"]
+
+for f in plotfns:
+    globals()[f]=plotw(getattr(pyplot, f))
+
+
+
+def outw(f):
+    "Wrap an output function"
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        kwargs["fname"]=args[0]
+        scmd(f.__name__, kwargs)
+        flush(os.path.splitext(args[0])[0])
+        return f(**kwargs)        
+    return wrapper    
+
+savefig=outw(pyplot.savefig)
+
