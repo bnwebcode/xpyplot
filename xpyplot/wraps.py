@@ -1,3 +1,4 @@
+import os
 import functools
 import json
 import inspect
@@ -35,6 +36,14 @@ def sarg(n, a):
     else:
         return str(a)
 
+def sargl(n, a):
+    "Save argument list"
+    res="["
+    for x in a:
+        res+=sarg(n, x) + ", "
+    res+="]"
+    return res
+
 def flushdatafiles(pref):
     global _FD, _CL
     for k in _FD:
@@ -48,7 +57,13 @@ def scmd(n, args):
     global _CL
     res="pyplot.{}(".format(n)
     for k in args:
-        if k == "kwargs":
+        # We need to trap args and kwargs because pyplot functions
+        # like plot are themselves wrappers which do not transfer the
+        # wrapped function signatures (only the docstring is
+        # copied). Maybe an improvement for matplotlib for future?
+        if k == "args":
+            res += "*{}".format(sargl(n, args[k])) +", "
+        elif k == "kwargs":
             res +=  "**{}".format(args[k]) +", "
         else:
             res +=  "{}=".format(k) + sarg(n, args[k]) +", "
@@ -73,7 +88,7 @@ def plotw(f):
         return f(*args, **kwargs)
     return wrapper
 
-plotfns=["hist", "plot"]
+plotfns=["hist", "plot", "scatter"]
 
 for f in plotfns:
     globals()[f]=plotw(getattr(pyplot, f))
