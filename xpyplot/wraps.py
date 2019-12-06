@@ -111,3 +111,4 @@ def outw(f):
 
 savefig=outw(pyplot.savefig)
 
+__all__ = plotfns + ["savefig"]
