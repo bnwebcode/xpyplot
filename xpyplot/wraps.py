@@ -3,6 +3,7 @@ import functools
 import json
 import inspect
 import tempfile
+import shutil
 
 import numpy
 
@@ -49,7 +50,10 @@ def flushdatafiles(pref):
     for k in _FD:
         tf=_FD[k]
         nf=pref+"."+k+".npy"
-        os.replace(tf.name, nf)
+        if os.path.exists(nf) and os.path.isfile(nf):
+            os.remove(nf)
+        # Shutil version cane move between different devices, os can not
+        shutil.move(tf.name, nf)
         _CL.insert(0,"{}=numpy.load(open(\"{}\", \"rb\"))\n".format(k, nf))
     _FD={}
 
