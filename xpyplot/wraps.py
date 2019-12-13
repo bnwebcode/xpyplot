@@ -97,6 +97,18 @@ plotfns=["hist", "plot", "scatter"]
 for f in plotfns:
     globals()[f]=plotw(getattr(pyplot, f))
 
+def passw(f):
+    """
+    Pass through wrap -- just record the call
+    """
+    # At the moment wrap in the same way as plotting command, but in
+    # principle could remove the array saving path 
+    return plotw(f)
+
+passfns=[ 'colorbar', 'xlabel',  'ylabel', "title", 'xlim', 'ylim']
+for f in passfns:
+    globals()[f]=plotw(getattr(pyplot, f))
+
 
 
 def outw(f):
@@ -111,4 +123,4 @@ def outw(f):
 
 savefig=outw(pyplot.savefig)
 
-__all__ = plotfns + ["savefig"]
+__all__ = plotfns + passfns + ["savefig"]
