@@ -137,6 +137,6 @@ def clearw(f):
         return f(*args, **kwargs)        
     return wrapper
 
-clf=clearw(pyplot.gcf)
+clf=clearw(pyplot.clf)
 
 __all__ = plotfns + passfns + ["savefig", "clf"]
