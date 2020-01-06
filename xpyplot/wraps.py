@@ -82,6 +82,12 @@ def flush(pref):
             f.write(l)
     _CL=[]
     __i=0
+    
+def clear():
+    "Clear saved data and commands"
+    global _CL, _FD
+    _CL=[]
+    _FD={}
 
 def plotw(f):
     "Wrap a plotting-type function"
@@ -123,4 +129,14 @@ def outw(f):
 
 savefig=outw(pyplot.savefig)
 
-__all__ = plotfns + passfns + ["savefig"]
+def clearw(f):
+    "Wrap a clear-like function"
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        clear()
+        return f(*args, **kwargs)        
+    return wrapper
+
+clf=clearw(pyplot.gcf)
+
+__all__ = plotfns + passfns + ["savefig", "clf"]
