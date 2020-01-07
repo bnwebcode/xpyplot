@@ -30,3 +30,9 @@ and two numpy array files ```testsample.plot1.npy``` and
 ```testsample.plot0.npy```.  Running the generated script will
 reproduce the original plot.
 
+See also
+########
+
+There is a short write-up at:
+http://www.bnikolic.co.uk/blog/python/2020/01/06/xpyplot.html
+
